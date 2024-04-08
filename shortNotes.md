@@ -131,4 +131,71 @@ Output: The output of the assembler is a binary file, often called an object fil
 
   subtraction is similar
 
+# Multiplication (MUL)
+
+  In assembly language, the `MUL` instruction is used to perform unsigned multiplication. It allows multiplying two numbers together. Here's a breakdown of how it works:
+
+- **Syntax**: `MUL argument`
+
+- **Argument**: The operand specified after the `MUL` instruction 
+represents the number to be multiplied with the accumulator register.
+
+- **Size**: The size of the operand determines which registers are involved in the multiplication operation.
+
+  - If the operand is 8 bits, it multiplies the value in the `AL` register with the operand and stores the result in the `AX` register.
+
+  - If the operand is 16 bits, it multiplies the value in the `AX` register with the operand and stores the result in the `DX:AX` register pair.
+
+  - `DX` is a seperate 16-bit register used to hold the high-order bits of a 32-bit value when working with data larger than 16 bits
+
+  - If the operand is 32 bits, it multiplies the value in the `EAX` register with the operand and stores the result in the `EDX:EAX` register pair.
+
+- **Result Size**: The result of the multiplication is always twice the size of the operand.
+
+- **Register Concatenation**: When storing the result in a register pair (`DX:AX` or `EDX:EAX`), the result is stored by concatenating the high-order bits (in `DX` or `EDX`) with the low-order bits (in `AX` or `EAX`).
+
+- **Examples**:
+  - `MUL ECX`: Multiplies the value in `EAX` by the value in `ECX` and stores the result in `EDX:EAX`.
+  - `MUL SI`: Multiplies the value in `AX` by the value in `SI` and stores the result in `DX:AX`.
+  - `MUL AL`: Multiplies the value in `AL` by itself and stores the result in `AX`.
+
+- **Invalid Example**: `MUL 2Ah`: This is an invalid example because `2Ah` is not a register or memory location. The `MUL` instruction can only operate on registers or memory operands.
+
+# Division DIV
+
+In assembly language, the `DIV` instruction is used for unsigned division. It divides one number by another number and stores both the quotient and remainder. Here's how it works:
+
+- **Syntax**: `DIV arg`
+- **Argument**: The operand specified after the `DIV` instruction represents the divisor, which is the number by which the dividend (a register or memory location) will be divided.
+- **Unsigned Division**: `DIV` performs unsigned division, meaning both the dividend and divisor are treated as unsigned integers.
+- **Result**:
+  - The quotient is stored in a specific register depending on the size of the operand.
+  - The remainder is also stored in a specific register depending on the size of the operand.
+- **Exception Handling**: The `DIV` instruction can raise exceptions under certain conditions, such as division by zero or if the quotient overflows.
+
+Here's a breakdown of the `DIV` instruction based on the size of the operand:
+
+1. **Operand of Size 8 Bits**:
+   - Quotient: `AL = AX / arg`
+   - Remainder: `AH = AX % arg`
+
+2. **Operand of Size 16 Bits**:
+   - Quotient: `AX = DX:AX / arg`
+   - Remainder: `DX = DX:AX % arg`
+
+3. **Operand of Size 32 Bits**:
+   - Quotient: `EAX = EDX:EAX / arg`
+   - Remainder: `EDX = EDX:EAX % arg`
+
+- **Examples**:
+  - `DIV CH`: Divides `AX` by `CH` and stores the quotient in `AL` and the remainder in `AH`.
+  - `DIV ESI`: Divides `EDX:EAX` by `ESI` and stores the quotient in `EAX` and the remainder in `EDX`.
+  - `DIV DI`: Divides `DX:AX` by `DI` and stores the quotient in `AX` and the remainder in `DX`.
+  
+- **Invalid Example**: `DIV 5CAh`: This is invalid because `DIV` expects a register or memory location as an operand, not an immediate value.
+
+- **Exceptions**:
+  - Division by zero: If the divisor is zero, the processor raises a division by zero exception.
+  - Quotient overflow: If the quotient is too large to fit in the specified register, the processor raises an overflow exception.
+
   
